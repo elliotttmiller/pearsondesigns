@@ -3,7 +3,7 @@ import { resolve } from 'path';
 
 export default defineConfig({
   root: '.',
-  base: '/pearson-designs/',
+  base: '/pearsondesigns/',
   server: {
     port: 5173
   },
