@@ -13,12 +13,10 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        'interior-design': resolve(__dirname, 'interior-design.html'),
-        'home-staging': resolve(__dirname, 'home-staging.html'),
+        'services': resolve(__dirname, 'services.html'),
+        'about': resolve(__dirname, 'about.html'),
         'showroom': resolve(__dirname, 'showroom.html'),
-        'vendors': resolve(__dirname, 'vendors.html'),
         'contact': resolve(__dirname, 'contact.html'),
-  // 'journal' entry removed — journal page removed from navigation and redirected
       }
     }
   }
