@@ -134,19 +134,64 @@
 
     <main id="main-content">
         <!-- Hero Section -->
-        <section class="hero" aria-label="Services hero">
-            <div class="hero-video-wrap" style="aspect-ratio: 16/9; overflow: hidden; display: block;">
-                <img src="/pearson_portfolio/11411%20Riverview%20Road/3.jpeg" 
-                     alt="Elegant residential interior design with modern furniture" 
-                     loading="eager" 
-                     fetchpriority="high"
-                     decoding="async"
-                     style="width:100%; height:100%; object-fit: cover; display:block;">
+        <section class="hero hero-slider" aria-label="Services hero">
+            <!-- Slider Container -->
+            <div class="hero-slider-container">
+                <!-- Slide 1 -->
+                <div class="hero-slide active" data-slide="1">
+                    <div class="hero-video-wrap">
+                        <img src="/pearson_portfolio/11411%20Riverview%20Road/3.jpeg" 
+                             alt="Elegant residential interior design with modern furniture" 
+                             loading="eager" 
+                             fetchpriority="high"
+                             decoding="async">
+                    </div>
+                </div>
+                
+                <!-- Slide 2 -->
+                <div class="hero-slide" data-slide="2">
+                    <div class="hero-video-wrap">
+                        <img src="/pearson_portfolio/6450%20Fox%20Path/4.jpeg" 
+                             alt="Contemporary living room design" 
+                             loading="lazy" 
+                             decoding="async">
+                    </div>
+                </div>
+                
+                <!-- Slide 3 -->
+                <div class="hero-slide" data-slide="3">
+                    <div class="hero-video-wrap">
+                        <img src="/pearson_portfolio/5138%20Hankerson/Office.jpg" 
+                             alt="Modern office space design" 
+                             loading="lazy" 
+                             decoding="async">
+                    </div>
+                </div>
+                
+                <!-- Slide 4 -->
+                <div class="hero-slide" data-slide="4">
+                    <div class="hero-video-wrap">
+                        <img src="/pearson_portfolio/Ventana%20Apartments/Living.jpg" 
+                             alt="Apartment interior design" 
+                             loading="lazy" 
+                             decoding="async">
+                    </div>
+                </div>
             </div>
+            
+            <!-- Hero Content Overlay -->
             <div class="hero-content">
                 <span class="mono">What We Do</span>
                 <h1 class="hero-title" id="hero-title">Our Services</h1>
                 <p>Fast, collaborative design process that puts you in control. From virtual consultations to 3D previews, we've reimagined interior design for the modern homeowner.</p>
+            </div>
+            
+            <!-- Slider Navigation Dots -->
+            <div class="hero-slider-nav" aria-label="Slide navigation">
+                <button class="slider-dot active" data-slide="1" aria-label="Go to slide 1"></button>
+                <button class="slider-dot" data-slide="2" aria-label="Go to slide 2"></button>
+                <button class="slider-dot" data-slide="3" aria-label="Go to slide 3"></button>
+                <button class="slider-dot" data-slide="4" aria-label="Go to slide 4"></button>
             </div>
         </section>
 
