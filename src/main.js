@@ -160,6 +160,136 @@ document.addEventListener('DOMContentLoaded', () => {
     title.style.transform = 'translateY(0)';
   }
 
+  // Hero Slider functionality
+  const initHeroSlider = () => {
+    const sliderContainer = document.querySelector('.hero-slider-container');
+    if (!sliderContainer) return; // Exit if no slider on this page
+
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots = document.querySelectorAll('.slider-dot');
+    let currentSlide = 0;
+    let autoplayInterval = null;
+    const AUTOPLAY_DELAY = 5000; // 5 seconds per slide
+
+    // Function to go to a specific slide
+    const goToSlide = (index) => {
+      // Remove active class from current slide and dot
+      slides[currentSlide].classList.remove('active');
+      dots[currentSlide].classList.remove('active');
+
+      // Update current slide index
+      currentSlide = index;
+
+      // Add active class to new slide and dot
+      slides[currentSlide].classList.add('active');
+      dots[currentSlide].classList.add('active');
+    };
+
+    // Function to go to next slide
+    const nextSlide = () => {
+      const next = (currentSlide + 1) % slides.length;
+      goToSlide(next);
+    };
+
+    // Function to go to previous slide
+    const prevSlide = () => {
+      const prev = (currentSlide - 1 + slides.length) % slides.length;
+      goToSlide(prev);
+    };
+
+    // Start autoplay
+    const startAutoplay = () => {
+      stopAutoplay(); // Clear any existing interval
+      autoplayInterval = setInterval(nextSlide, AUTOPLAY_DELAY);
+    };
+
+    // Stop autoplay
+    const stopAutoplay = () => {
+      if (autoplayInterval) {
+        clearInterval(autoplayInterval);
+        autoplayInterval = null;
+      }
+    };
+
+    // Add click handlers to dots
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        goToSlide(index);
+        // Reset autoplay when user manually navigates
+        startAutoplay();
+      });
+    });
+
+    // Pause autoplay on hover
+    const heroSection = document.querySelector('.hero-slider');
+    if (heroSection) {
+      heroSection.addEventListener('mouseenter', stopAutoplay);
+      heroSection.addEventListener('mouseleave', startAutoplay);
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (!sliderContainer) return;
+      
+      // Only handle keyboard if slider is in view
+      const rect = sliderContainer.getBoundingClientRect();
+      const inView = rect.top < window.innerHeight && rect.bottom > 0;
+      
+      if (inView) {
+        if (e.key === 'ArrowLeft') {
+          prevSlide();
+          startAutoplay();
+        } else if (e.key === 'ArrowRight') {
+          nextSlide();
+          startAutoplay();
+        }
+      }
+    });
+
+    // Touch/swipe support for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    const handleSwipe = () => {
+      const swipeThreshold = 50; // Minimum swipe distance
+      if (touchEndX < touchStartX - swipeThreshold) {
+        // Swipe left - next slide
+        nextSlide();
+        startAutoplay();
+      } else if (touchEndX > touchStartX + swipeThreshold) {
+        // Swipe right - previous slide
+        prevSlide();
+        startAutoplay();
+      }
+    };
+
+    if (heroSection) {
+      heroSection.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      });
+
+      heroSection.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      });
+    }
+
+    // Start autoplay on page load
+    startAutoplay();
+
+    // Pause autoplay when page is not visible (performance optimization)
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        stopAutoplay();
+      } else {
+        startAutoplay();
+      }
+    });
+  };
+
+  // Initialize hero slider
+  initHeroSlider();
+
   // Simple Smooth Scroll
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {

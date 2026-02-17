@@ -225,20 +225,76 @@
     </div>
 
     <main id="main-content">
-        <!-- Hero Section -->
-        <section class="hero" id="home" aria-label="Hero introduction">
-            <div class="hero-video-wrap" style="aspect-ratio: 16/9; overflow: hidden; display: block;">
-                <img src="/pearson_portfolio/Hill%20Farm%20Condominiums/Hill-Farm-Condos-300-MLS-15.jpg" 
-                     alt="Hill Farm Condominiums living area — Pearson Designs project" 
-                     loading="eager" 
-                     fetchpriority="high"
-                     decoding="async"
-                     style="width:100%; height:100%; object-fit: cover; display:block;">
+        <!-- Hero Section with Slider -->
+        <section class="hero hero-slider" id="home" aria-label="Hero introduction">
+            <!-- Slider Container -->
+            <div class="hero-slider-container">
+                <!-- Slide 1 -->
+                <div class="hero-slide active" data-slide="1">
+                    <div class="hero-video-wrap">
+                        <img src="/pearson_portfolio/Hill%20Farm%20Condominiums/Hill-Farm-Condos-300-MLS-15.jpg" 
+                             alt="Hill Farm Condominiums living area — Pearson Designs project" 
+                             loading="eager" 
+                             fetchpriority="high"
+                             decoding="async">
+                    </div>
+                </div>
+                
+                <!-- Slide 2 -->
+                <div class="hero-slide" data-slide="2">
+                    <div class="hero-video-wrap">
+                        <img src="/pearson_portfolio/11411%20Riverview%20Road/3.jpeg" 
+                             alt="Modern residential interior design" 
+                             loading="lazy" 
+                             decoding="async">
+                    </div>
+                </div>
+                
+                <!-- Slide 3 -->
+                <div class="hero-slide" data-slide="3">
+                    <div class="hero-video-wrap">
+                        <img src="/pearson_portfolio/3025%20Fairchild%20Avenue/Living+Room.jpg" 
+                             alt="Luxury living room design" 
+                             loading="lazy" 
+                             decoding="async">
+                    </div>
+                </div>
+                
+                <!-- Slide 4 -->
+                <div class="hero-slide" data-slide="4">
+                    <div class="hero-video-wrap">
+                        <img src="/pearson_portfolio/45%20Clay%20Cliffe/Kitchen+2.jpg" 
+                             alt="Contemporary kitchen design" 
+                             loading="lazy" 
+                             decoding="async">
+                    </div>
+                </div>
+                
+                <!-- Slide 5 -->
+                <div class="hero-slide" data-slide="5">
+                    <div class="hero-video-wrap">
+                        <img src="/pearson_portfolio/Hill%20Farm%20Condominiums/Hill-Farm-Condos-300-MLS-12.jpg" 
+                             alt="Elegant residential space" 
+                             loading="lazy" 
+                             decoding="async">
+                    </div>
+                </div>
             </div>
+            
+            <!-- Hero Content Overlay -->
             <div class="hero-content">
                 <span class="mono">Minneapolis | Wayzata</span>
                 <h1 class="hero-title" id="hero-title">Interior Design, Delivered in Days—Not Weeks</h1>
                 <p>Virtual consultations on Zoom. Live collaborative mood boards. 3D walkthroughs you can view on your phone. Custom proposals in 48 hours. This is interior design, reimagined for how you live today.</p>
+            </div>
+            
+            <!-- Slider Navigation Dots -->
+            <div class="hero-slider-nav" aria-label="Slide navigation">
+                <button class="slider-dot active" data-slide="1" aria-label="Go to slide 1"></button>
+                <button class="slider-dot" data-slide="2" aria-label="Go to slide 2"></button>
+                <button class="slider-dot" data-slide="3" aria-label="Go to slide 3"></button>
+                <button class="slider-dot" data-slide="4" aria-label="Go to slide 4"></button>
+                <button class="slider-dot" data-slide="5" aria-label="Go to slide 5"></button>
             </div>
         </section>
 
