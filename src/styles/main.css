@@ -699,6 +699,11 @@ textarea:focus-visible {
     z-index: 1;
 }
 
+/* Optimize active slide images for GPU acceleration */
+.hero-slide.active .hero-video-wrap img {
+    will-change: transform;
+}
+
 /* Slide images with enhanced Ken Burns effect */
 .hero-slide .hero-video-wrap img {
     width: 100%;

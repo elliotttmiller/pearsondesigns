@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dots = document.querySelectorAll('.slider-dot');
     let currentSlide = 0;
     let autoplayInterval = null;
-    const AUTOPLAY_DELAY = 5000; // 5 seconds per slide
+    const AUTOPLAY_DELAY_MS = 5000; // 5 seconds per slide
 
     // Function to go to a specific slide
     const goToSlide = (index) => {
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Start autoplay
     const startAutoplay = () => {
       stopAutoplay(); // Clear any existing interval
-      autoplayInterval = setInterval(nextSlide, AUTOPLAY_DELAY);
+      autoplayInterval = setInterval(nextSlide, AUTOPLAY_DELAY_MS);
     };
 
     // Stop autoplay
@@ -221,16 +221,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Pause autoplay on hover
-    const heroSection = document.querySelector('.hero-slider');
+    const heroSection = sliderContainer.closest('.hero-slider');
     if (heroSection) {
       heroSection.addEventListener('mouseenter', stopAutoplay);
       heroSection.addEventListener('mouseleave', startAutoplay);
     }
 
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-      if (!sliderContainer) return;
-      
+    // Keyboard navigation handler (scoped to this slider)
+    const handleKeydown = (e) => {
       // Only handle keyboard if slider is in view
       const rect = sliderContainer.getBoundingClientRect();
       const inView = rect.top < window.innerHeight && rect.bottom > 0;
@@ -244,7 +242,9 @@ document.addEventListener('DOMContentLoaded', () => {
           startAutoplay();
         }
       }
-    });
+    };
+    
+    document.addEventListener('keydown', handleKeydown);
 
     // Touch/swipe support for mobile
     let touchStartX = 0;
