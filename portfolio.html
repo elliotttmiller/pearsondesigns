@@ -147,13 +147,52 @@
 
     <main id="main-content">
         <!-- Hero Section -->
-        <section class="hero" aria-label="Portfolio hero">
-            <div class="hero-video-wrap">
-                <img src="/pearson_portfolio/3025%20Fairchild%20Avenue/Living+Room.jpg" 
-                     alt="Luxury living room design — 3025 Fairchild Avenue" 
-                     loading="eager" 
-                     fetchpriority="high">
+        <section class="hero hero-slider" aria-label="Portfolio hero">
+            <!-- Slider Container -->
+            <div class="hero-slider-container">
+                <!-- Slide 1 -->
+                <div class="hero-slide active" data-slide="1">
+                    <div class="hero-video-wrap">
+                        <img src="/pearson_portfolio/3025%20Fairchild%20Avenue/Living+Room.jpg" 
+                             alt="Luxury living room design — 3025 Fairchild Avenue" 
+                             loading="eager" 
+                             fetchpriority="high"
+                             decoding="async">
+                    </div>
+                </div>
+                
+                <!-- Slide 2 -->
+                <div class="hero-slide" data-slide="2">
+                    <div class="hero-video-wrap">
+                        <img src="/pearson_portfolio/45%20Clay%20Cliffe/Family+Room.jpg" 
+                             alt="Family room design — 45 Clay Cliffe" 
+                             loading="lazy" 
+                             decoding="async">
+                    </div>
+                </div>
+                
+                <!-- Slide 3 -->
+                <div class="hero-slide" data-slide="3">
+                    <div class="hero-video-wrap">
+                        <img src="/pearson_portfolio/28005%20Boulder%20Bridge%20Drive/1.jpeg" 
+                             alt="Elegant interior — Boulder Bridge Drive" 
+                             loading="lazy" 
+                             decoding="async">
+                    </div>
+                </div>
+                
+                <!-- Slide 4 -->
+                <div class="hero-slide" data-slide="4">
+                    <div class="hero-video-wrap">
+                        <img src="/pearson_portfolio/3025%20Brooks%20Lane/Living.jpg" 
+                             alt="Living space — 3025 Brooks Lane" 
+                             loading="lazy" 
+                             decoding="async">
+                    </div>
+                </div>
             </div>
+            
+            <!-- Hero Content Overlay -->
             <div class="hero-content">
                 <span class="mono">COMPLETED PROJECTS</span>
                 <h1 class="hero-title" id="hero-title">Our Portfolio</h1>
@@ -161,6 +200,31 @@
                 <div style="margin-top: 2rem;">
                     <a href="contact.html" class="cta-pill magnetic">Start Your Project</a>
                 </div>
+            </div>
+            
+            <!-- Navigation Arrow Buttons -->
+            <div class="hero-slider-arrows">
+                <button class="slider-arrow prev" aria-label="Previous slide">
+                    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <button class="slider-arrow next" aria-label="Next slide">
+                    <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+            </div>
+            
+            <!-- Slide Counter -->
+            <div class="hero-slide-counter">
+                <span class="current">01</span>
+                <span class="divider">/</span>
+                <span class="total">04</span>
+            </div>
+            
+            <!-- Slider Navigation Dots -->
+            <div class="hero-slider-nav" aria-label="Slide navigation">
+                <button class="slider-dot active" data-slide="1" aria-label="Go to slide 1"></button>
+                <button class="slider-dot" data-slide="2" aria-label="Go to slide 2"></button>
+                <button class="slider-dot" data-slide="3" aria-label="Go to slide 3"></button>
+                <button class="slider-dot" data-slide="4" aria-label="Go to slide 4"></button>
             </div>
         </section>
 

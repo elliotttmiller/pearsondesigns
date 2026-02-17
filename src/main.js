@@ -160,6 +160,255 @@ document.addEventListener('DOMContentLoaded', () => {
     title.style.transform = 'translateY(0)';
   }
 
+  // Hero Slider functionality with advanced effects
+  const initHeroSlider = () => {
+    const sliderContainer = document.querySelector('.hero-slider-container');
+    if (!sliderContainer) return; // Exit if no slider on this page
+
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots = document.querySelectorAll('.slider-dot');
+    const heroSection = sliderContainer.closest('.hero-slider');
+    let currentSlide = 0;
+    let autoplayInterval = null;
+    let cachedActiveSlide = null; // Cache for parallax performance
+    const AUTOPLAY_DELAY_MS = 7000; // 7 seconds per slide for more immersive viewing
+
+    // Function to go to a specific slide with enhanced transitions
+    const goToSlide = (index) => {
+      if (index === currentSlide) return;
+      
+      // Add exiting class to current slide for smooth transition
+      slides[currentSlide].classList.add('exiting');
+      dots[currentSlide].classList.remove('active');
+
+      // Remove active class after a short delay
+      setTimeout(() => {
+        slides[currentSlide].classList.remove('active', 'exiting');
+      }, 1000);
+
+      // Update current slide index
+      currentSlide = index;
+
+      // Add active class to new slide and dot
+      slides[currentSlide].classList.add('active');
+      dots[currentSlide].classList.add('active');
+      
+      // Update cached active slide for parallax
+      if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+        cachedActiveSlide = slides[currentSlide];
+      }
+      
+      // Update slide counter
+      updateSlideCounter();
+    };
+
+    // Function to go to next slide
+    const nextSlide = () => {
+      const next = (currentSlide + 1) % slides.length;
+      goToSlide(next);
+    };
+
+    // Function to go to previous slide
+    const prevSlide = () => {
+      const prev = (currentSlide - 1 + slides.length) % slides.length;
+      goToSlide(prev);
+    };
+
+    // Update slide counter display
+    const updateSlideCounter = () => {
+      const counter = document.querySelector('.hero-slide-counter');
+      if (counter) {
+        const current = counter.querySelector('.current');
+        const total = counter.querySelector('.total');
+        if (current) {
+          current.textContent = String(currentSlide + 1).padStart(2, '0');
+        }
+        // Dynamically set total based on actual slide count
+        if (total && !total.dataset.initialized) {
+          total.textContent = String(slides.length).padStart(2, '0');
+          total.dataset.initialized = 'true';
+        }
+      }
+    };
+
+    // Start autoplay
+    const startAutoplay = () => {
+      stopAutoplay(); // Clear any existing interval
+      autoplayInterval = setInterval(nextSlide, AUTOPLAY_DELAY_MS);
+    };
+
+    // Stop autoplay
+    const stopAutoplay = () => {
+      if (autoplayInterval) {
+        clearInterval(autoplayInterval);
+        autoplayInterval = null;
+      }
+    };
+
+    // Add click handlers to dots
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        goToSlide(index);
+        // Reset autoplay when user manually navigates
+        startAutoplay();
+      });
+    });
+
+    // Add arrow button handlers
+    const prevButton = document.querySelector('.slider-arrow.prev');
+    const nextButton = document.querySelector('.slider-arrow.next');
+    
+    if (prevButton) {
+      prevButton.addEventListener('click', () => {
+        prevSlide();
+        startAutoplay();
+      });
+    }
+    
+    if (nextButton) {
+      nextButton.addEventListener('click', () => {
+        nextSlide();
+        startAutoplay();
+      });
+    }
+
+    // Pause autoplay on hover
+    if (heroSection) {
+      heroSection.addEventListener('mouseenter', stopAutoplay);
+      heroSection.addEventListener('mouseleave', startAutoplay);
+    }
+
+    // Parallax mouse tracking effect
+    let mouseX = 0;
+    let mouseY = 0;
+    let isMouseInside = false;
+    
+    if (heroSection && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+      sliderContainer.classList.add('parallax-active');
+      
+      heroSection.addEventListener('mousemove', (e) => {
+        if (!isMouseInside || !cachedActiveSlide) return;
+        
+        const rect = heroSection.getBoundingClientRect();
+        mouseX = (e.clientX - rect.left) / rect.width - 0.5;
+        mouseY = (e.clientY - rect.top) / rect.height - 0.5;
+        
+        // Apply parallax effect to cached active slide
+        const parallaxX = mouseX * 20;
+        const parallaxY = mouseY * 20;
+        const rotateX = mouseY * 2;
+        const rotateY = -mouseX * 2;
+        
+        cachedActiveSlide.style.transform = `
+          scale(1) 
+          translateZ(0) 
+          rotateX(${rotateX}deg) 
+          rotateY(${rotateY}deg)
+        `;
+        
+        const img = cachedActiveSlide.querySelector('.hero-video-wrap img');
+        if (img) {
+          img.style.transform = `
+            translate(${parallaxX}px, ${parallaxY}px)
+          `;
+        }
+      });
+      
+      heroSection.addEventListener('mouseenter', () => {
+        isMouseInside = true;
+        cachedActiveSlide = document.querySelector('.hero-slide.active');
+      });
+      
+      heroSection.addEventListener('mouseleave', () => {
+        isMouseInside = false;
+        // Reset transforms
+        if (cachedActiveSlide) {
+          cachedActiveSlide.style.transform = '';
+          const img = cachedActiveSlide.querySelector('.hero-video-wrap img');
+          if (img) {
+            img.style.transform = '';
+          }
+          cachedActiveSlide = null;
+        }
+      });
+    }
+
+    // Keyboard navigation handler (scoped to this slider)
+    const handleKeydown = (e) => {
+      // Only handle keyboard if slider is in view
+      const rect = sliderContainer.getBoundingClientRect();
+      const inView = rect.top < window.innerHeight && rect.bottom > 0;
+      
+      if (inView) {
+        if (e.key === 'ArrowLeft') {
+          prevSlide();
+          startAutoplay();
+        } else if (e.key === 'ArrowRight') {
+          nextSlide();
+          startAutoplay();
+        }
+      }
+    };
+    
+    document.addEventListener('keydown', handleKeydown);
+
+    // Enhanced touch/swipe support for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let touchStartY = 0;
+    let touchEndY = 0;
+
+    const handleSwipe = () => {
+      const swipeThreshold = 50; // Minimum swipe distance
+      const horizontalSwipe = Math.abs(touchEndX - touchStartX);
+      const verticalSwipe = Math.abs(touchEndY - touchStartY);
+      
+      // Only trigger if horizontal swipe is more dominant than vertical
+      if (horizontalSwipe > verticalSwipe && horizontalSwipe > swipeThreshold) {
+        if (touchEndX < touchStartX - swipeThreshold) {
+          // Swipe left - next slide
+          nextSlide();
+          startAutoplay();
+        } else if (touchEndX > touchStartX + swipeThreshold) {
+          // Swipe right - previous slide
+          prevSlide();
+          startAutoplay();
+        }
+      }
+    };
+
+    if (heroSection) {
+      heroSection.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
+      });
+
+      heroSection.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        touchEndY = e.changedTouches[0].screenY;
+        handleSwipe();
+      });
+    }
+
+    // Initialize slide counter
+    updateSlideCounter();
+
+    // Start autoplay on page load
+    startAutoplay();
+
+    // Pause autoplay when page is not visible (performance optimization)
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        stopAutoplay();
+      } else {
+        startAutoplay();
+      }
+    });
+  };
+
+  // Initialize hero slider
+  initHeroSlider();
+
   // Simple Smooth Scroll
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
