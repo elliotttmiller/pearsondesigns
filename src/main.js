@@ -160,22 +160,30 @@ document.addEventListener('DOMContentLoaded', () => {
     title.style.transform = 'translateY(0)';
   }
 
-  // Hero Slider functionality
+  // Hero Slider functionality with advanced effects
   const initHeroSlider = () => {
     const sliderContainer = document.querySelector('.hero-slider-container');
     if (!sliderContainer) return; // Exit if no slider on this page
 
     const slides = document.querySelectorAll('.hero-slide');
     const dots = document.querySelectorAll('.slider-dot');
+    const heroSection = sliderContainer.closest('.hero-slider');
     let currentSlide = 0;
     let autoplayInterval = null;
-    const AUTOPLAY_DELAY_MS = 5000; // 5 seconds per slide
+    const AUTOPLAY_DELAY_MS = 7000; // 7 seconds per slide for more immersive viewing
 
-    // Function to go to a specific slide
+    // Function to go to a specific slide with enhanced transitions
     const goToSlide = (index) => {
-      // Remove active class from current slide and dot
-      slides[currentSlide].classList.remove('active');
+      if (index === currentSlide) return;
+      
+      // Add exiting class to current slide for smooth transition
+      slides[currentSlide].classList.add('exiting');
       dots[currentSlide].classList.remove('active');
+
+      // Remove active class after a short delay
+      setTimeout(() => {
+        slides[currentSlide].classList.remove('active', 'exiting');
+      }, 1000);
 
       // Update current slide index
       currentSlide = index;
@@ -183,6 +191,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // Add active class to new slide and dot
       slides[currentSlide].classList.add('active');
       dots[currentSlide].classList.add('active');
+      
+      // Update slide counter
+      updateSlideCounter();
     };
 
     // Function to go to next slide
@@ -195,6 +206,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevSlide = () => {
       const prev = (currentSlide - 1 + slides.length) % slides.length;
       goToSlide(prev);
+    };
+
+    // Update slide counter display
+    const updateSlideCounter = () => {
+      const counter = document.querySelector('.hero-slide-counter');
+      if (counter) {
+        const current = counter.querySelector('.current');
+        if (current) {
+          current.textContent = String(currentSlide + 1).padStart(2, '0');
+        }
+      }
     };
 
     // Start autoplay
@@ -220,11 +242,85 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
 
+    // Add arrow button handlers
+    const prevButton = document.querySelector('.slider-arrow.prev');
+    const nextButton = document.querySelector('.slider-arrow.next');
+    
+    if (prevButton) {
+      prevButton.addEventListener('click', () => {
+        prevSlide();
+        startAutoplay();
+      });
+    }
+    
+    if (nextButton) {
+      nextButton.addEventListener('click', () => {
+        nextSlide();
+        startAutoplay();
+      });
+    }
+
     // Pause autoplay on hover
-    const heroSection = sliderContainer.closest('.hero-slider');
     if (heroSection) {
       heroSection.addEventListener('mouseenter', stopAutoplay);
       heroSection.addEventListener('mouseleave', startAutoplay);
+    }
+
+    // Parallax mouse tracking effect
+    let mouseX = 0;
+    let mouseY = 0;
+    let isMouseInside = false;
+    
+    if (heroSection && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+      sliderContainer.classList.add('parallax-active');
+      
+      heroSection.addEventListener('mousemove', (e) => {
+        if (!isMouseInside) return;
+        
+        const rect = heroSection.getBoundingClientRect();
+        mouseX = (e.clientX - rect.left) / rect.width - 0.5;
+        mouseY = (e.clientY - rect.top) / rect.height - 0.5;
+        
+        // Apply parallax effect to active slide
+        const activeSlide = document.querySelector('.hero-slide.active');
+        if (activeSlide) {
+          const parallaxX = mouseX * 20;
+          const parallaxY = mouseY * 20;
+          const rotateX = mouseY * 2;
+          const rotateY = -mouseX * 2;
+          
+          activeSlide.style.transform = `
+            scale(1) 
+            translateZ(0) 
+            rotateX(${rotateX}deg) 
+            rotateY(${rotateY}deg)
+          `;
+          
+          const img = activeSlide.querySelector('.hero-video-wrap img');
+          if (img) {
+            img.style.transform = `
+              translate(${parallaxX}px, ${parallaxY}px)
+            `;
+          }
+        }
+      });
+      
+      heroSection.addEventListener('mouseenter', () => {
+        isMouseInside = true;
+      });
+      
+      heroSection.addEventListener('mouseleave', () => {
+        isMouseInside = false;
+        // Reset transforms
+        const activeSlide = document.querySelector('.hero-slide.active');
+        if (activeSlide) {
+          activeSlide.style.transform = '';
+          const img = activeSlide.querySelector('.hero-video-wrap img');
+          if (img) {
+            img.style.transform = '';
+          }
+        }
+      });
     }
 
     // Keyboard navigation handler (scoped to this slider)
@@ -246,33 +342,46 @@ document.addEventListener('DOMContentLoaded', () => {
     
     document.addEventListener('keydown', handleKeydown);
 
-    // Touch/swipe support for mobile
+    // Enhanced touch/swipe support for mobile
     let touchStartX = 0;
     let touchEndX = 0;
+    let touchStartY = 0;
+    let touchEndY = 0;
 
     const handleSwipe = () => {
       const swipeThreshold = 50; // Minimum swipe distance
-      if (touchEndX < touchStartX - swipeThreshold) {
-        // Swipe left - next slide
-        nextSlide();
-        startAutoplay();
-      } else if (touchEndX > touchStartX + swipeThreshold) {
-        // Swipe right - previous slide
-        prevSlide();
-        startAutoplay();
+      const horizontalSwipe = Math.abs(touchEndX - touchStartX);
+      const verticalSwipe = Math.abs(touchEndY - touchStartY);
+      
+      // Only trigger if horizontal swipe is more dominant than vertical
+      if (horizontalSwipe > verticalSwipe && horizontalSwipe > swipeThreshold) {
+        if (touchEndX < touchStartX - swipeThreshold) {
+          // Swipe left - next slide
+          nextSlide();
+          startAutoplay();
+        } else if (touchEndX > touchStartX + swipeThreshold) {
+          // Swipe right - previous slide
+          prevSlide();
+          startAutoplay();
+        }
       }
     };
 
     if (heroSection) {
       heroSection.addEventListener('touchstart', (e) => {
         touchStartX = e.changedTouches[0].screenX;
+        touchStartY = e.changedTouches[0].screenY;
       });
 
       heroSection.addEventListener('touchend', (e) => {
         touchEndX = e.changedTouches[0].screenX;
+        touchEndY = e.changedTouches[0].screenY;
         handleSwipe();
       });
     }
+
+    // Initialize slide counter
+    updateSlideCounter();
 
     // Start autoplay on page load
     startAutoplay();
