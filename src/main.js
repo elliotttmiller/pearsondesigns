@@ -170,6 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroSection = sliderContainer.closest('.hero-slider');
     let currentSlide = 0;
     let autoplayInterval = null;
+    let cachedActiveSlide = null; // Cache for parallax performance
     const AUTOPLAY_DELAY_MS = 7000; // 7 seconds per slide for more immersive viewing
 
     // Function to go to a specific slide with enhanced transitions
@@ -192,6 +193,11 @@ document.addEventListener('DOMContentLoaded', () => {
       slides[currentSlide].classList.add('active');
       dots[currentSlide].classList.add('active');
       
+      // Update cached active slide for parallax
+      if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+        cachedActiveSlide = slides[currentSlide];
+      }
+      
       // Update slide counter
       updateSlideCounter();
     };
@@ -213,8 +219,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const counter = document.querySelector('.hero-slide-counter');
       if (counter) {
         const current = counter.querySelector('.current');
+        const total = counter.querySelector('.total');
         if (current) {
           current.textContent = String(currentSlide + 1).padStart(2, '0');
+        }
+        // Dynamically set total based on actual slide count
+        if (total && !total.dataset.initialized) {
+          total.textContent = String(slides.length).padStart(2, '0');
+          total.dataset.initialized = 'true';
         }
       }
     };
@@ -275,50 +287,48 @@ document.addEventListener('DOMContentLoaded', () => {
       sliderContainer.classList.add('parallax-active');
       
       heroSection.addEventListener('mousemove', (e) => {
-        if (!isMouseInside) return;
+        if (!isMouseInside || !cachedActiveSlide) return;
         
         const rect = heroSection.getBoundingClientRect();
         mouseX = (e.clientX - rect.left) / rect.width - 0.5;
         mouseY = (e.clientY - rect.top) / rect.height - 0.5;
         
-        // Apply parallax effect to active slide
-        const activeSlide = document.querySelector('.hero-slide.active');
-        if (activeSlide) {
-          const parallaxX = mouseX * 20;
-          const parallaxY = mouseY * 20;
-          const rotateX = mouseY * 2;
-          const rotateY = -mouseX * 2;
-          
-          activeSlide.style.transform = `
-            scale(1) 
-            translateZ(0) 
-            rotateX(${rotateX}deg) 
-            rotateY(${rotateY}deg)
+        // Apply parallax effect to cached active slide
+        const parallaxX = mouseX * 20;
+        const parallaxY = mouseY * 20;
+        const rotateX = mouseY * 2;
+        const rotateY = -mouseX * 2;
+        
+        cachedActiveSlide.style.transform = `
+          scale(1) 
+          translateZ(0) 
+          rotateX(${rotateX}deg) 
+          rotateY(${rotateY}deg)
+        `;
+        
+        const img = cachedActiveSlide.querySelector('.hero-video-wrap img');
+        if (img) {
+          img.style.transform = `
+            translate(${parallaxX}px, ${parallaxY}px)
           `;
-          
-          const img = activeSlide.querySelector('.hero-video-wrap img');
-          if (img) {
-            img.style.transform = `
-              translate(${parallaxX}px, ${parallaxY}px)
-            `;
-          }
         }
       });
       
       heroSection.addEventListener('mouseenter', () => {
         isMouseInside = true;
+        cachedActiveSlide = document.querySelector('.hero-slide.active');
       });
       
       heroSection.addEventListener('mouseleave', () => {
         isMouseInside = false;
         // Reset transforms
-        const activeSlide = document.querySelector('.hero-slide.active');
-        if (activeSlide) {
-          activeSlide.style.transform = '';
-          const img = activeSlide.querySelector('.hero-video-wrap img');
+        if (cachedActiveSlide) {
+          cachedActiveSlide.style.transform = '';
+          const img = cachedActiveSlide.querySelector('.hero-video-wrap img');
           if (img) {
             img.style.transform = '';
           }
+          cachedActiveSlide = null;
         }
       });
     }

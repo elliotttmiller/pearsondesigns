@@ -921,7 +921,7 @@ textarea:focus-visible {
 
 .slider-dot.active::after {
     opacity: 1;
-    animation: progress-spin 5s linear;
+    animation: progress-spin 7s linear;
 }
 
 @keyframes progress-spin {
