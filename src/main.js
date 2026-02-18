@@ -171,9 +171,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSlide = 0;
     let autoplayInterval = null;
     let cachedActiveSlide = null; // Cache for parallax performance
-    const AUTOPLAY_DELAY_MS = 7000; // 7 seconds per slide for more immersive viewing
+    const AUTOPLAY_DELAY_MS = 9000; // 9 seconds per slide for more immersive Revolution-style viewing
 
-    // Function to go to a specific slide with enhanced transitions
+    // Function to go to a specific slide with enhanced Revolution-style transitions
     const goToSlide = (index) => {
       if (index === currentSlide) return;
       
@@ -181,10 +181,10 @@ document.addEventListener('DOMContentLoaded', () => {
       slides[currentSlide].classList.add('exiting');
       dots[currentSlide].classList.remove('active');
 
-      // Remove active class after a short delay
+      // Remove active class after transition completes
       setTimeout(() => {
         slides[currentSlide].classList.remove('active', 'exiting');
-      }, 1000);
+      }, 1500); // Match the CSS transition duration
 
       // Update current slide index
       currentSlide = index;
@@ -278,10 +278,49 @@ document.addEventListener('DOMContentLoaded', () => {
       heroSection.addEventListener('mouseleave', startAutoplay);
     }
 
-    // Parallax mouse tracking effect
+    // Enhanced Revolution-style Parallax mouse tracking effect
     let mouseX = 0;
     let mouseY = 0;
     let isMouseInside = false;
+    let rafId = null;
+    
+    // Smooth interpolation for parallax
+    let currentX = 0;
+    let currentY = 0;
+    const smoothing = 0.1; // Smoother, more premium feel
+    
+    const updateParallax = () => {
+      if (!isMouseInside || !cachedActiveSlide) {
+        rafId = null;
+        return;
+      }
+      
+      // Smooth interpolation
+      currentX += (mouseX - currentX) * smoothing;
+      currentY += (mouseY - currentY) * smoothing;
+      
+      // Apply enhanced parallax effect with reduced intensity for elegance
+      const parallaxX = currentX * 15;
+      const parallaxY = currentY * 15;
+      const rotateX = currentY * 1.5;
+      const rotateY = -currentX * 1.5;
+      
+      cachedActiveSlide.style.transform = `
+        scale(1) 
+        translateZ(0) 
+        rotateX(${rotateX}deg) 
+        rotateY(${rotateY}deg)
+      `;
+      
+      const img = cachedActiveSlide.querySelector('.hero-video-wrap img');
+      if (img) {
+        img.style.transform = `
+          translate(${parallaxX}px, ${parallaxY}px)
+        `;
+      }
+      
+      rafId = requestAnimationFrame(updateParallax);
+    };
     
     if (heroSection && window.matchMedia('(prefers-reduced-motion: no-preference)').matches) {
       sliderContainer.classList.add('parallax-active');
@@ -292,44 +331,39 @@ document.addEventListener('DOMContentLoaded', () => {
         const rect = heroSection.getBoundingClientRect();
         mouseX = (e.clientX - rect.left) / rect.width - 0.5;
         mouseY = (e.clientY - rect.top) / rect.height - 0.5;
-        
-        // Apply parallax effect to cached active slide
-        const parallaxX = mouseX * 20;
-        const parallaxY = mouseY * 20;
-        const rotateX = mouseY * 2;
-        const rotateY = -mouseX * 2;
-        
-        cachedActiveSlide.style.transform = `
-          scale(1) 
-          translateZ(0) 
-          rotateX(${rotateX}deg) 
-          rotateY(${rotateY}deg)
-        `;
-        
-        const img = cachedActiveSlide.querySelector('.hero-video-wrap img');
-        if (img) {
-          img.style.transform = `
-            translate(${parallaxX}px, ${parallaxY}px)
-          `;
-        }
       });
       
       heroSection.addEventListener('mouseenter', () => {
         isMouseInside = true;
         cachedActiveSlide = document.querySelector('.hero-slide.active');
+        if (!rafId) {
+          rafId = requestAnimationFrame(updateParallax);
+        }
       });
       
       heroSection.addEventListener('mouseleave', () => {
         isMouseInside = false;
-        // Reset transforms
+        // Smooth reset with animation
         if (cachedActiveSlide) {
+          cachedActiveSlide.style.transition = 'transform 0.8s cubic-bezier(0.65, 0, 0.35, 1)';
           cachedActiveSlide.style.transform = '';
           const img = cachedActiveSlide.querySelector('.hero-video-wrap img');
           if (img) {
+            img.style.transition = 'transform 0.8s cubic-bezier(0.65, 0, 0.35, 1)';
             img.style.transform = '';
           }
+          // Reset transition after animation
+          setTimeout(() => {
+            if (cachedActiveSlide) {
+              cachedActiveSlide.style.transition = '';
+              const img = cachedActiveSlide.querySelector('.hero-video-wrap img');
+              if (img) img.style.transition = '';
+            }
+          }, 800);
           cachedActiveSlide = null;
         }
+        currentX = 0;
+        currentY = 0;
       });
     }
 
