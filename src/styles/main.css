@@ -596,7 +596,7 @@ textarea:focus-visible {
     transition: background 300ms ease;
 }
 
-/* Make hero content sit above overlay */
+/* Make hero content sit above overlay - Revolution Style with Layered Animation */
 .hero-content {
     position: relative;
     z-index: 2;
@@ -604,6 +604,76 @@ textarea:focus-visible {
     color: white;
     max-width: 1100px; /* widen the hero content container so text can spread wider */
     margin: 0 auto;
+}
+
+/* Layer-based animations for Revolution-style entrance effects */
+.hero-content .mono {
+    opacity: 0;
+    transform: translateY(-30px);
+    animation: layerSlideDown 1.2s cubic-bezier(0.65, 0, 0.35, 1) 0.3s forwards;
+}
+
+.hero-title {
+    opacity: 0;
+    transform: translateX(-50px) scale(0.95);
+    animation: layerSlideInScale 1.4s cubic-bezier(0.65, 0, 0.35, 1) 0.6s forwards;
+}
+
+.hero-content p {
+    opacity: 0;
+    transform: translateY(40px);
+    animation: layerFadeUp 1.5s cubic-bezier(0.65, 0, 0.35, 1) 0.9s forwards;
+}
+
+.hero-content .cta-pill {
+    opacity: 0;
+    transform: scale(0.8);
+    animation: layerScaleIn 1.3s cubic-bezier(0.65, 0, 0.35, 1) 1.2s forwards;
+}
+
+/* Revolution-style Layer Animation Keyframes */
+@keyframes layerSlideDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes layerSlideInScale {
+    0% {
+        opacity: 0;
+        transform: translateX(-50px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes layerFadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes layerScaleIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 @keyframes kenburns {
@@ -668,7 +738,7 @@ textarea:focus-visible {
    Hero Slider Styles
    =========================== */
 
-/* Hero Slider Container */
+/* Hero Slider Container - Revolution Style */
 .hero-slider-container {
     position: absolute;
     width: 100%;
@@ -676,11 +746,12 @@ textarea:focus-visible {
     top: 0;
     left: 0;
     z-index: 0;
-    perspective: 1000px; /* Enable 3D perspective */
+    perspective: 2000px; /* Enhanced 3D perspective for revolution effects */
     transform-style: preserve-3d;
+    overflow: hidden;
 }
 
-/* Individual Slide */
+/* Individual Slide - Revolution Style with Multiple Transition Types */
 .hero-slide {
     position: absolute;
     width: 100%;
@@ -689,32 +760,47 @@ textarea:focus-visible {
     left: 0;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), 
-                visibility 1.5s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 1.8s cubic-bezier(0.65, 0, 0.35, 1), 
+                visibility 1.8s cubic-bezier(0.65, 0, 0.35, 1),
+                transform 1.8s cubic-bezier(0.65, 0, 0.35, 1);
     z-index: 0;
-    transform: scale(0.95) translateZ(-100px);
-    filter: blur(5px);
+    transform: scale(0.9) translateZ(-200px);
+    filter: blur(10px) brightness(0.7);
     transform-style: preserve-3d;
+    transform-origin: center center;
 }
 
-/* Active slide with 3D effect */
+/* Active slide with enhanced 3D effect - Revolution Style */
 .hero-slide.active {
     opacity: 1;
     visibility: visible;
     z-index: 1;
     transform: scale(1) translateZ(0);
-    filter: blur(0);
+    filter: blur(0) brightness(1);
+    animation: slideActivation 1.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
 }
 
-/* Exiting slide animation */
+@keyframes slideActivation {
+    0% {
+        opacity: 0;
+        transform: scale(0.9) translateZ(-200px);
+        filter: blur(10px) brightness(0.7);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateZ(0);
+        filter: blur(0) brightness(1);
+    }
+}
+
+/* Exiting slide animation - Revolution Style with varied effects */
 .hero-slide.exiting {
     opacity: 0;
-    transform: scale(1.05) translateZ(-50px);
-    filter: blur(3px);
-    transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 1s cubic-bezier(0.4, 0, 0.2, 1),
-                filter 1s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: scale(1.1) translateZ(-100px) rotateY(-5deg);
+    filter: blur(8px) brightness(0.5);
+    transition: opacity 1.5s cubic-bezier(0.65, 0, 0.35, 1),
+                transform 1.5s cubic-bezier(0.65, 0, 0.35, 1),
+                filter 1.5s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 /* Optimize active slide images for GPU acceleration */
@@ -722,118 +808,162 @@ textarea:focus-visible {
     will-change: transform, filter;
 }
 
-/* Slide images with cinematic multi-directional Ken Burns effect */
+/* Slide images with cinematic Revolution-style Ken Burns effect */
 .hero-slide .hero-video-wrap img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: brightness(0.88) contrast(1.05) saturate(1.1);
+    filter: brightness(0.85) contrast(1.1) saturate(1.15);
     transform: scale(1);
-    transition: filter 2s ease;
+    transition: filter 3s cubic-bezier(0.65, 0, 0.35, 1);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
-/* Unique Ken Burns animation for each slide */
+/* Add subtle vignette overlay to each slide for cinematic effect */
+.hero-slide::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.3) 100%);
+    pointer-events: none;
+    opacity: 0.6;
+    z-index: 1;
+    mix-blend-mode: multiply;
+}
+
+/* Revolution-style Enhanced Ken Burns animation for each slide */
 .hero-slide[data-slide="1"].active .hero-video-wrap img {
-    animation: kenburns-zoom-pan-right 20s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+    animation: revolutionKenBurns1 25s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
 }
 
 .hero-slide[data-slide="2"].active .hero-video-wrap img {
-    animation: kenburns-diagonal-drift 22s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+    animation: revolutionKenBurns2 28s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
 }
 
 .hero-slide[data-slide="3"].active .hero-video-wrap img {
-    animation: kenburns-circular-motion 24s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+    animation: revolutionKenBurns3 30s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
 }
 
 .hero-slide[data-slide="4"].active .hero-video-wrap img {
-    animation: kenburns-zoom-pan-left 21s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+    animation: revolutionKenBurns4 26s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
 }
 
 .hero-slide[data-slide="5"].active .hero-video-wrap img {
-    animation: kenburns-slow-pull-back 26s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+    animation: revolutionKenBurns5 32s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
 }
 
-/* Cinematic Ken Burns Variations */
-@keyframes kenburns-zoom-pan-right {
+/* Revolution-Style Cinematic Ken Burns Animations */
+/* Each animation features multi-stage movements with varied pacing */
+
+@keyframes revolutionKenBurns1 {
     0% { 
-        transform: scale(1) translate(0, 0);
-        filter: brightness(0.88) contrast(1.05);
+        transform: scale(1) translate(0, 0) rotate(0deg);
+        filter: brightness(0.85) contrast(1.1) saturate(1.15);
+    }
+    25% {
+        transform: scale(1.08) translate(2%, -1%) rotate(0.3deg);
+        filter: brightness(0.88) contrast(1.12) saturate(1.18);
     }
     50% {
-        transform: scale(1.12) translate(3%, -2%);
-        filter: brightness(0.92) contrast(1.08);
+        transform: scale(1.15) translate(4%, -3%) rotate(0.5deg);
+        filter: brightness(0.90) contrast(1.15) saturate(1.2);
+    }
+    75% {
+        transform: scale(1.12) translate(1%, -2%) rotate(0.2deg);
+        filter: brightness(0.87) contrast(1.13) saturate(1.17);
     }
     100% { 
-        transform: scale(1.18) translate(-1%, 2%);
-        filter: brightness(0.90) contrast(1.06);
+        transform: scale(1.20) translate(-2%, 2%) rotate(-0.3deg);
+        filter: brightness(0.85) contrast(1.1) saturate(1.15);
     }
 }
 
-@keyframes kenburns-diagonal-drift {
+@keyframes revolutionKenBurns2 {
     0% { 
-        transform: scale(1.05) translate(-2%, -2%);
-        filter: brightness(0.90) contrast(1.04);
-    }
-    50% {
-        transform: scale(1.15) translate(2%, 1%);
-        filter: brightness(0.88) contrast(1.08);
-    }
-    100% { 
-        transform: scale(1.08) translate(-1%, 3%);
-        filter: brightness(0.92) contrast(1.05);
-    }
-}
-
-@keyframes kenburns-circular-motion {
-    0% { 
-        transform: scale(1.02) translate(0, 2%) rotate(0deg);
-        filter: brightness(0.88) contrast(1.06);
+        transform: scale(1.1) translate(-3%, -2%) rotate(-0.5deg);
+        filter: brightness(0.87) contrast(1.08) saturate(1.12);
     }
     33% {
-        transform: scale(1.12) translate(3%, -1%) rotate(0.5deg);
-        filter: brightness(0.91) contrast(1.08);
+        transform: scale(1.18) translate(1%, 1%) rotate(0deg);
+        filter: brightness(0.90) contrast(1.14) saturate(1.2);
     }
     66% {
-        transform: scale(1.16) translate(-2%, -2%) rotate(-0.5deg);
-        filter: brightness(0.89) contrast(1.07);
+        transform: scale(1.14) translate(3%, -1%) rotate(0.4deg);
+        filter: brightness(0.88) contrast(1.11) saturate(1.16);
     }
     100% { 
-        transform: scale(1.10) translate(1%, 1%) rotate(0deg);
-        filter: brightness(0.90) contrast(1.05);
+        transform: scale(1.08) translate(-2%, 2%) rotate(-0.2deg);
+        filter: brightness(0.85) contrast(1.1) saturate(1.14);
     }
 }
 
-@keyframes kenburns-zoom-pan-left {
+@keyframes revolutionKenBurns3 {
     0% { 
-        transform: scale(1.15) translate(2%, 1%);
-        filter: brightness(0.90) contrast(1.07);
+        transform: scale(1.05) translate(0, 3%) rotate(0.2deg);
+        filter: brightness(0.86) contrast(1.12) saturate(1.18);
     }
-    50% {
-        transform: scale(1.08) translate(-3%, -1%);
-        filter: brightness(0.88) contrast(1.05);
+    20% {
+        transform: scale(1.12) translate(3%, 1%) rotate(0.5deg);
+        filter: brightness(0.89) contrast(1.15) saturate(1.22);
+    }
+    40% {
+        transform: scale(1.18) translate(2%, -2%) rotate(0.3deg);
+        filter: brightness(0.91) contrast(1.16) saturate(1.24);
+    }
+    60% {
+        transform: scale(1.22) translate(-1%, -3%) rotate(-0.2deg);
+        filter: brightness(0.88) contrast(1.14) saturate(1.2);
+    }
+    80% {
+        transform: scale(1.16) translate(-3%, 0%) rotate(-0.4deg);
+        filter: brightness(0.87) contrast(1.12) saturate(1.17);
     }
     100% { 
-        transform: scale(1.20) translate(1%, -2%);
-        filter: brightness(0.92) contrast(1.08);
+        transform: scale(1.10) translate(1%, 2%) rotate(0deg);
+        filter: brightness(0.85) contrast(1.1) saturate(1.15);
     }
 }
 
-@keyframes kenburns-slow-pull-back {
+@keyframes revolutionKenBurns4 {
     0% { 
-        transform: scale(1.20) translate(-1%, -1%);
-        filter: brightness(0.91) contrast(1.08);
+        transform: scale(1.15) translate(3%, 1%) rotate(0.4deg);
+        filter: brightness(0.88) contrast(1.13) saturate(1.19);
     }
-    50% {
-        transform: scale(1.10) translate(2%, 2%);
-        filter: brightness(0.88) contrast(1.05);
+    40% {
+        transform: scale(1.10) translate(-2%, -2%) rotate(-0.3deg);
+        filter: brightness(0.86) contrast(1.11) saturate(1.16);
+    }
+    70% {
+        transform: scale(1.18) translate(-4%, 1%) rotate(-0.5deg);
+        filter: brightness(0.90) contrast(1.15) saturate(1.21);
     }
     100% { 
-        transform: scale(1.05) translate(0, 0);
-        filter: brightness(0.90) contrast(1.06);
+        transform: scale(1.22) translate(2%, -3%) rotate(0.2deg);
+        filter: brightness(0.89) contrast(1.14) saturate(1.18);
     }
 }
 
-/* Slider Navigation Dots */
+@keyframes revolutionKenBurns5 {
+    0% { 
+        transform: scale(1.20) translate(-2%, -2%) rotate(-0.3deg);
+        filter: brightness(0.89) contrast(1.14) saturate(1.2);
+    }
+    30% {
+        transform: scale(1.15) translate(2%, 1%) rotate(0.2deg);
+        filter: brightness(0.87) contrast(1.12) saturate(1.17);
+    }
+    60% {
+        transform: scale(1.10) translate(3%, -1%) rotate(0.4deg);
+        filter: brightness(0.85) contrast(1.1) saturate(1.14);
+    }
+    100% { 
+        transform: scale(1.05) translate(-1%, 3%) rotate(-0.2deg);
+        filter: brightness(0.88) contrast(1.13) saturate(1.18);
+    }
+}
+
+/* Revolution-style Slider Navigation Dots with Enhanced Glass Morphism */
 .hero-slider-nav {
     position: absolute;
     bottom: 3rem;
@@ -841,34 +971,43 @@ textarea:focus-visible {
     transform: translateX(-50%);
     z-index: 3;
     display: flex;
-    gap: 1rem;
-    padding: 1rem 1.5rem;
-    background: rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(15px);
+    gap: 1.2rem;
+    padding: 1.2rem 2rem;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-radius: 50px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3),
+                0 2px 8px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .hero-slider-nav:hover {
-    background: rgba(0, 0, 0, 0.35);
-    backdrop-filter: blur(20px);
-    transform: translateX(-50%) translateY(-5px);
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(25px) saturate(200%);
+    -webkit-backdrop-filter: blur(25px) saturate(200%);
+    transform: translateX(-50%) translateY(-8px);
+    box-shadow: 0 15px 60px rgba(0, 0, 0, 0.4),
+                0 5px 15px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.15);
 }
 
-/* Slider Dot Buttons with animated progress ring */
+/* Revolution-style Slider Dot Buttons with Liquid Animation */
 .slider-dot {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.6);
+    border: 2.5px solid rgba(255, 255, 255, 0.5);
     background: transparent;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.5s cubic-bezier(0.65, 0, 0.35, 1);
     padding: 0;
     position: relative;
     overflow: visible;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .slider-dot::before {
@@ -879,40 +1018,45 @@ textarea:focus-visible {
     transform: translate(-50%, -50%) scale(0);
     width: 100%;
     height: 100%;
-    background: white;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
     border-radius: 50%;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
-/* Progress ring for active slide */
+/* Progress ring for active slide - Revolution-style spinning animation */
 .slider-dot::after {
     content: '';
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    width: 24px;
-    height: 24px;
+    transform: translate(-50%, -50%) rotate(0deg);
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    border: 2px solid transparent;
-    border-top-color: rgba(255, 255, 255, 0.8);
+    border: 2.5px solid transparent;
+    border-top-color: rgba(255, 255, 255, 0.9);
+    border-right-color: rgba(255, 255, 255, 0.4);
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.4s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 .slider-dot:hover {
-    border-color: rgba(255, 255, 255, 0.9);
-    transform: scale(1.3);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: scale(1.4);
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
 }
 
 .slider-dot:hover::before {
-    transform: translate(-50%, -50%) scale(0.6);
+    transform: translate(-50%, -50%) scale(0.5);
 }
 
 .slider-dot.active {
-    border-color: white;
-    background: white;
-    transform: scale(1.4);
+    border-color: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.5);
+    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.3),
+                inset 0 2px 4px rgba(255, 255, 255, 0.2);
 }
 
 .slider-dot.active::before {
@@ -935,7 +1079,7 @@ textarea:focus-visible {
     }
 }
 
-/* Navigation Arrow Buttons */
+/* Revolution-style Navigation Arrow Buttons with Premium Glass Effect */
 .hero-slider-arrows {
     position: absolute;
     top: 50%;
@@ -946,37 +1090,40 @@ textarea:focus-visible {
     pointer-events: none;
     display: flex;
     justify-content: space-between;
-    padding: 0 2rem;
+    padding: 0 2.5rem;
 }
 
 .slider-arrow {
     pointer-events: all;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(15px) saturate(180%);
+    -webkit-backdrop-filter: blur(15px) saturate(180%);
+    border: 2.5px solid rgba(255, 255, 255, 0.25);
     color: white;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.5s cubic-bezier(0.65, 0, 0.35, 1);
     opacity: 0;
     transform: translateX(0);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .hero-slider:hover .slider-arrow {
-    opacity: 1;
+    opacity: 0.85;
 }
 
 .slider-arrow.prev {
-    transform: translateX(-20px);
+    transform: translateX(-30px);
 }
 
 .slider-arrow.next {
-    transform: translateX(20px);
+    transform: translateX(30px);
 }
 
 .hero-slider:hover .slider-arrow.prev {
@@ -988,52 +1135,78 @@ textarea:focus-visible {
 }
 
 .slider-arrow:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.8);
-    transform: scale(1.1);
+    opacity: 1 !important;
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.15);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(255, 255, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .slider-arrow svg {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     stroke: currentColor;
-    stroke-width: 2;
+    stroke-width: 2.5;
     fill: none;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-/* Slide Counter */
+.slider-arrow:hover svg {
+    transform: scale(1.1);
+}
+
+/* Revolution-style Slide Counter with Premium Glass Morphism */
 .hero-slide-counter {
     position: absolute;
-    top: 2rem;
-    right: 2rem;
+    top: 2.5rem;
+    right: 2.5rem;
     z-index: 3;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.85rem;
+    font-size: 0.95rem;
+    font-weight: 500;
     color: white;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(10px);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    opacity: 0.8;
-    transition: opacity 0.3s ease;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(15px) saturate(180%);
+    -webkit-backdrop-filter: blur(15px) saturate(180%);
+    padding: 0.75rem 1.5rem;
+    border-radius: 30px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    opacity: 0.85;
+    transition: all 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    letter-spacing: 0.5px;
 }
 
 .hero-slide-counter:hover {
     opacity: 1;
+    transform: scale(1.05);
+    border-color: rgba(255, 255, 255, 0.35);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(255, 255, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .hero-slide-counter .current {
-    font-weight: 500;
-    font-size: 1.1em;
+    font-weight: 600;
+    font-size: 1.15em;
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .hero-slide-counter .divider {
-    opacity: 0.5;
-    margin: 0 0.5rem;
+    opacity: 0.4;
+    margin: 0 0.6rem;
 }
 
-/* Cinematic grain overlay for texture */
+.hero-slide-counter .total {
+    opacity: 0.7;
+}
+
+/* Cinematic grain overlay for texture - Revolution style */
 .hero-slider-container::before {
     content: '';
     position: absolute;
@@ -1042,11 +1215,43 @@ textarea:focus-visible {
     width: 100%;
     height: 100%;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    opacity: 0.03;
+    opacity: 0.04;
     z-index: 2;
     pointer-events: none;
     mix-blend-mode: overlay;
-    animation: grain-animation 8s steps(10) infinite;
+    animation: grain-animation 10s steps(12) infinite;
+}
+
+/* Subtle animated particles overlay for depth - Revolution style */
+.hero-slider-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(2px 2px at 20% 30%, rgba(255, 255, 255, 0.15), transparent),
+                radial-gradient(2px 2px at 60% 70%, rgba(255, 255, 255, 0.1), transparent),
+                radial-gradient(1px 1px at 50% 50%, rgba(255, 255, 255, 0.12), transparent),
+                radial-gradient(1px 1px at 80% 10%, rgba(255, 255, 255, 0.08), transparent),
+                radial-gradient(2px 2px at 90% 60%, rgba(255, 255, 255, 0.1), transparent),
+                radial-gradient(1px 1px at 33% 80%, rgba(255, 255, 255, 0.09), transparent);
+    background-size: 200% 200%;
+    opacity: 0.5;
+    z-index: 2;
+    pointer-events: none;
+    animation: particles-float 20s ease-in-out infinite;
+}
+
+@keyframes particles-float {
+    0%, 100% {
+        background-position: 0% 0%, 100% 100%, 50% 50%, 0% 100%, 100% 0%, 50% 100%;
+        opacity: 0.5;
+    }
+    50% {
+        background-position: 100% 100%, 0% 0%, 100% 0%, 50% 50%, 0% 100%, 100% 50%;
+        opacity: 0.7;
+    }
 }
 
 @keyframes grain-animation {
